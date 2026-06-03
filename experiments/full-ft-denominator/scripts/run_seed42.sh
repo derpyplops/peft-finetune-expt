@@ -13,9 +13,11 @@ SEED=42; EPOCHS=10
 CFG=examples/peftbench/full/llama-3-8b-instruct
 mkdir -p results
 
-# ascending train-set size (cheap/fast first → bugs surface early; cost ramps last)
-datasets=(cb copa wsc svamp conala rte mrpc openbookqa apps wic stsb gsm8k cola boolq \
-          piqa codealpacapy multirc math_qa siqa hellaswag winogrande sst2 mmlu record qnli qqp mnli)
+# ascending train-set size from the materialized local datasets (conala DROPPED: mined-source
+# leakage train==eval; apps is large 117k after kinit solution-explosion → now a cost-driver near the end)
+datasets=(cb copa wsc svamp rte mrpc openbookqa wic stsb gsm8k codealpacapy cola boolq piqa \
+          multirc math_qa siqa hellaswag winogrande sst2 mmlu qnli apps qqp mnli)
+# DROPPED: conala (mined-source train==eval leakage), record (metric needs deleted rbelanec/record). 25/27.
 
 for d in "${datasets[@]}"; do
   tag="${d}_s${SEED}"
