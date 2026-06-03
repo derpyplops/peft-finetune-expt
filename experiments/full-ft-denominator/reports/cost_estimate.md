@@ -27,6 +27,15 @@ test to de-risk it is ~**$20–40** and a few hours.
   ~350 instance-hours → ~$1,700 at ~$4.8/instance-hr (2×H100 SXM on vast).
 - Eval (generation over `<name>_eval` splits) adds ~10–20% → budget ~$250 on top.
 
+## Phase 3a — ONE seed (seed 42), the immediate ask
+
+1 seed = ~1.8B tokens. On **1× H200 @ $3.82/hr** at ~5,500 tok/s (full-FT 8B, ~37% MFU): training ~91
+GPU-hrs + eval ~14 = **~105 GPU-hrs ≈ $400** (range $300–600). ~1/5 of full fidelity by construction.
+- Cost concentration: the 5 giant datasets ≈ $290 (record ~$140, mnli ~$60, qqp ~$45, mmlu ~$30, qnli ~$17);
+  the other 22 datasets ≈ $100 combined.
+- Wall-clock: ~4.5 days serial on one H200, or ~1.5 days if the 5 giants are sharded onto their own boxes.
+- All-in first pass incl. one-time smoke test (~$30): **~$430**.
+
 ## Scenarios & levers
 
 | Scenario | Instance-hrs | Cost | Notes |

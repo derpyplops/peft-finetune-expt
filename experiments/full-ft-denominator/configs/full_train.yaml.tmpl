@@ -1,7 +1,7 @@
 seed: ${SEED}
 
 ### model
-model_name_or_path: meta-llama/Meta-Llama-3-8B-Instruct
+model_name_or_path: ${MODEL}   # default NousResearch/Meta-Llama-3-8B-Instruct (ungated, weights == meta-llama)
 trust_remote_code: true
 flash_attn: auto
 use_cache: false
@@ -10,7 +10,7 @@ use_cache: false
 stage: sft
 do_train: true
 finetuning_type: full
-deepspeed: ${DEEPSPEED_CONFIG}   # e.g. examples/deepspeed/ds_z3_config.json (ZeRO-3, shards optim/grad/params)
+# single H200 (141GB) fits full-FT 8B without ZeRO; add `deepspeed: <z3>` only for the 2xH100 fallback
 
 ### dataset  -- identical to paper (full HF train split, no subsampling)
 dataset: ${DATASET}
@@ -22,16 +22,18 @@ dataloader_num_workers: 2
 packing: false
 
 ### output
-output_dir: ${OUTPUT_DIR}
+output_dir: ${OUTPUT_DIR}     # MUST be stable per (dataset,seed) so a restart finds its checkpoints
 logging_steps: 5
-save_steps: 0.05
-overwrite_output_dir: true
-save_only_model: false
+save_steps: 0.05              # checkpoint every 5% of steps → max ~5% work lost on interruption
+overwrite_output_dir: false   # CRITICAL: false enables LLaMA-Factory auto-resume (parser.py:403).
+                              # true (the paper's value) wipes the dir and restarts from scratch.
+save_only_model: false        # keep optimizer+scheduler+RNG in checkpoints → required to resume
+                              # (cost: full-FT checkpoint ≈ weights 16GB + optim ~64-96GB sharded)
 plot_loss: true
 include_num_input_tokens_seen: true
-push_to_hub: false            # paper pushes to hub org rbelanec; we keep checkpoints local
-load_best_model_at_end: true  # with eval_steps below = early-stop-by-best-val-loss (paper default)
-save_total_limit: 1
+push_to_hub: false            # paper pushes adapters to hub org rbelanec; full 8B models are too big to push
+load_best_model_at_end: true  # with eval_steps below = keep best-val checkpoint (paper default)
+save_total_limit: 1           # bounds disk: only most-recent kept (+best is protected by HF Trainer)
 
 ### train  -- paper hyperparams, EXCEPT learning_rate (see note)
 per_device_train_batch_size: 4
@@ -40,6 +42,7 @@ num_train_epochs: ${EPOCHS}       # paper canonical run_exp.sh = 10
 weight_decay: 1.0e-5
 lr_scheduler_type: cosine
 bf16: true
+gradient_checkpointing: true  # full-FT activation memory; mathematically identical (recompute), just memory/speed
 ddp_timeout: 180000000
 resume_from_checkpoint: null
 warmup_ratio: 0.1

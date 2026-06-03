@@ -1,6 +1,12 @@
 # vendored upstream repos (cloned locally for reference; not ours to track)
 experiments/*/vendor/
 
+# secrets — NEVER commit (repo is public)
+.env.local
+*.key
+*secret*
+wandb_key*
+
 # python / os cruft
 __pycache__/
 *.pyc

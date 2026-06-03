@@ -69,16 +69,19 @@ Mixed-precision AdamW, 8.03B params:
 - fp32 optimizer master + m + v ≈ 3 × 32 GB = 96 GB
 - activations (batch 4, grad checkpointing on) ≈ 5–15 GB
 
-→ **~130 GB+ total. Does not fit on one 80 GB GPU naively.** Options, cheapest first:
+→ **~100–130 GB total. Does not fit on one 80 GB H100, but fits on one 141 GB H200.** Live vast prices
+(2026-06-03, rentable, >300 GB disk, fast net):
 
-| Option | Config | Fits? | Notes |
-|---|---|---|---|
-| A | 1× H100 80GB, DeepSpeed ZeRO-3 + CPU optimizer/param offload | ✅ | cheapest $/run, slowest (CPU offload tax). Needs a high-RAM host (≥128 GB). |
-| B | 2× H100 80GB (NVLink), ZeRO-3, no offload | ✅ | clean, ~linear speedup. Recommended default. |
-| C | 1× H100 80GB, 8-bit AdamW + grad checkpointing, no ZeRO | ⚠️ | ~48 GB states + acts, fits but bitsandbytes 8-bit Adam ≠ paper's AdamW (extra deviation). Avoid unless cost-critical. |
+| Option | Config | VRAM | $/hr | Fits? | Notes |
+|---|---|---|---|---|---|
+| **A (CHOSEN)** | **1× H200** | 141 GB | **$3.82** | ✅ single-card | no ZeRO-3 / no offload — simplest + fast. ~13 GB headroom; smoke test must confirm 2048-ctx peak. |
+| B (fallback) | 2× H100 SXM, ZeRO-3 | 2×80 GB | $4.00 | ✅ sharded | if a single H200 is too slow on apps/record. More moving parts (DeepSpeed). |
+| C | 1× H100 80GB, ZeRO-3 + CPU offload | 80 GB | $2.64 | ✅ offload | cheapest/hr but offload tax → likely slower *per job*. Skip unless cost-critical. |
+| — | 1× B200 | 180 GB | $4.38 | ✅ | overkill + newer-driver/torch-compat risk. |
 
-**Recommendation: Option B (2× H100 80GB) with LLaMA-Factory's bundled `ds_z3_config.json`.** Falls back
-to Option A on a single card if 2× offers are scarce.
+**Recommendation: Option A — single H200.** Same choice for smoke test and full sweep (peak memory is set
+by model+optimizer, not dataset size). Fall back to B (2× H100 ZeRO-3) only if the smoke test's long-context
+run OOMs or is too slow. Note: provision **~300 GB disk** for the ~80–110 GB full-FT checkpoints.
 
 ---
 
@@ -95,6 +98,28 @@ Image: `hiyouga/llamafactory:latest` (ships LLaMA-Factory + deps) **or** `pytorc
 `pip install -e .` of PEFT-Factory. Prefer the LLaMA-Factory image and overlay the PEFT-Factory fork on top.
 
 ---
+
+## Checkpointing, resume & weight storage
+
+**Three layers of interruption recovery:**
+1. **Sweep level** — driver skips any (dataset,seed) whose `results.jsonl` already exists. A fresh box
+   resumes the sweep where it stopped.
+2. **Run level** — LLaMA-Factory auto-resumes a partially-trained run from its last checkpoint
+   (`overwrite_output_dir: false` + stable `output_dir`; restores weights+optimizer+scheduler+RNG+step).
+   Max work lost on a kill = one `save_steps` interval (5% of the run).
+3. **Durability** — vast local disk is **ephemeral and wiped on reclaim**. For resume to mean anything,
+   checkpoints must survive the box: `rsync` the `output_dir` to durable storage after each save, OR run the
+   giant datasets (mnli/qqp/qnli/record/mmlu) on **on-demand (non-interruptible)** instances. Results
+   (`results.jsonl`, tiny) are always synced off-box immediately.
+
+**Weight storage — the full-FT-specific problem (doesn't exist for PEFT):**
+- A full-FT checkpoint keeps optimizer state too → **~80–110 GB on disk each** (16 GB bf16 weights +
+  ~64–96 GB fp32 AdamW state, ZeRO-3-sharded). `save_total_limit: 1` bounds it to ~1 (+best) at a time.
+  → provision **~300 GB disk** per box (the plan's earlier 200 GB is too tight for full FT), not 50 GB.
+- A *final* full model is ~16 GB. Keeping all **135 of them = ~2 TB** — pointless for a denominator.
+- **We only need the metrics, not the weights.** Driver does train → eval → `compute_metrics.py` → persist
+  the small `results.jsonl`, then **delete the checkpoint/model**. Optionally keep ONE final model
+  (e.g. best NLU dataset) if collaborators want an artifact. `push_to_hub: false` (135×16 GB to the Hub is absurd).
 
 ## Phases
 
