@@ -1,0 +1,245 @@
+[
+ {
+  "name": "rte",
+  "hf_hub_url": "nyu-mll/glue",
+  "subset": "rte",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    # GLUE RTE ClassLabel names: ['entailment', 'not_entailment']\n    LABELS = {0: \"entailment\", 1: \"not_entailment\"}\n    label = ex[\"label\"]\n    if label == -1:\n        return None\n    resp = LABELS.get(label)\n    if resp is None:\n        return None\n    return {\"prompt\": ex[\"sentence1\"], \"query\": ex[\"sentence2\"], \"response\": resp}",
+  "verified": true
+ },
+ {
+  "name": "mrpc",
+  "hf_hub_url": "nyu-mll/glue",
+  "subset": "mrpc",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    LABELS = {0: \"not_equivalent\", 1: \"equivalent\"}\n    label = ex.get(\"label\", -1)\n    if label == -1 or label not in LABELS:\n        return None\n    s1 = ex.get(\"sentence1\")\n    s2 = ex.get(\"sentence2\")\n    if not s1 or not s2:\n        return None\n    return {\"prompt\": s1, \"query\": s2, \"response\": LABELS[label]}",
+  "verified": true
+ },
+ {
+  "name": "cola",
+  "hf_hub_url": "nyu-mll/glue",
+  "subset": "cola",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    LABEL_MAP = {0: \"unacceptable\", 1: \"acceptable\"}\n    label = ex.get(\"label\", -1)\n    if label == -1:\n        return None\n    sentence = ex.get(\"sentence\")\n    if not sentence or not str(sentence).strip():\n        return None\n    resp = LABEL_MAP.get(label)\n    if resp is None:\n        return None\n    return {\"prompt\": str(sentence), \"query\": None, \"response\": resp}",
+  "verified": true
+ },
+ {
+  "name": "sst2",
+  "hf_hub_url": "nyu-mll/glue",
+  "subset": "sst2",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    LABEL_MAP = {0: \"negative\", 1: \"positive\"}\n    label = ex.get(\"label\", -1)\n    if label == -1 or label not in LABEL_MAP:\n        return None\n    sentence = ex.get(\"sentence\")\n    if not sentence or not sentence.strip():\n        return None\n    return {\"prompt\": sentence.strip(), \"query\": None, \"response\": LABEL_MAP[label]}",
+  "verified": true
+ },
+ {
+  "name": "qnli",
+  "hf_hub_url": "nyu-mll/glue",
+  "subset": "qnli",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    LABELS = {0: \"entailment\", 1: \"not_entailment\"}\n    label = ex[\"label\"]\n    if label == -1:\n        return None\n    resp = LABELS.get(label)\n    if resp is None:\n        return None\n    q = ex.get(\"question\")\n    s = ex.get(\"sentence\")\n    if not q or not s:\n        return None\n    return {\"prompt\": q, \"query\": s, \"response\": resp}",
+  "verified": true
+ },
+ {
+  "name": "qqp",
+  "hf_hub_url": "nyu-mll/glue",
+  "subset": "qqp",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    label_map = {0: \"not_duplicate\", 1: \"duplicate\"}\n    lab = ex.get(\"label\", -1)\n    if lab == -1 or lab not in label_map:\n        return None\n    q1 = ex.get(\"question1\")\n    q2 = ex.get(\"question2\")\n    if not q1 or not q2:\n        return None\n    return {\n        \"prompt\": q1,\n        \"query\": q2,\n        \"response\": label_map[lab],\n    }",
+  "verified": true
+ },
+ {
+  "name": "mnli",
+  "hf_hub_url": "nyu-mll/glue",
+  "subset": "mnli",
+  "train_split": "train",
+  "eval_split": "validation_matched",
+  "builder_code": "def build(ex):\n    # Hardcoded ClassLabel index->name map (verified against ds.features['label'].names)\n    LABELS = {0: \"entailment\", 1: \"neutral\", 2: \"contradiction\"}\n    label = ex.get(\"label\", -1)\n    if label == -1 or label not in LABELS:\n        return None\n    premise = ex.get(\"premise\")\n    hypothesis = ex.get(\"hypothesis\")\n    if not premise or not hypothesis:\n        return None\n    return {\"prompt\": str(premise), \"query\": str(hypothesis), \"response\": LABELS[label]}",
+  "verified": true
+ },
+ {
+  "name": "cb",
+  "hf_hub_url": "aps/super_glue",
+  "subset": "cb",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    LABELS = {0: \"entailment\", 1: \"contradiction\", 2: \"neutral\"}\n    label = ex.get(\"label\", -1)\n    if label not in LABELS:\n        return None\n    premise = ex.get(\"premise\")\n    hypothesis = ex.get(\"hypothesis\")\n    if not premise:\n        return None\n    return {\n        \"prompt\": premise,\n        \"query\": hypothesis,\n        \"response\": LABELS[label],\n    }",
+  "verified": true
+ },
+ {
+  "name": "boolq",
+  "hf_hub_url": "aps/super_glue",
+  "subset": "boolq",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    # ClassLabel names: ['False', 'True'] -> canonical lowercase expected labels\n    LABEL_MAP = {0: \"false\", 1: \"true\"}\n    label = ex.get(\"label\", -1)\n    if label == -1:\n        return None\n    resp = LABEL_MAP.get(label)\n    if resp is None:\n        return None\n    prompt = ex.get(\"question\")\n    passage = ex.get(\"passage\")\n    if not prompt:\n        return None\n    return {\"prompt\": prompt, \"query\": passage, \"response\": resp}",
+  "verified": true
+ },
+ {
+  "name": "stsb",
+  "hf_hub_url": "nyu-mll/glue",
+  "subset": "stsb",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    s1 = ex.get(\"sentence1\")\n    s2 = ex.get(\"sentence2\")\n    lbl = ex.get(\"label\")\n    if s1 is None or s2 is None or lbl is None:\n        return None\n    return {\n        \"prompt\": str(s1),\n        \"query\": str(s2),\n        \"response\": str(round(float(lbl), 1)),\n    }",
+  "verified": true
+ },
+ {
+  "name": "conala",
+  "hf_hub_url": "codeparrot/conala-mined-curated",
+  "subset": null,
+  "train_split": "train",
+  "eval_split": "train",
+  "builder_code": "def build(ex):\n    # CoNaLa mined-curated: NL intent -> Python code snippet (CodeBLEU-scored).\n    # rewritten_intent is often null in mined data; fall back to raw `intent`.\n    intent = ex.get(\"rewritten_intent\") or ex.get(\"intent\")\n    code = ex.get(\"snippet\")\n    if not intent or not str(intent).strip():\n        return None\n    if not code or not str(code).strip():\n        return None\n    return {\"prompt\": str(intent).strip(), \"query\": None, \"response\": str(code).strip()}",
+  "verified": true
+ },
+ {
+  "name": "codealpacapy",
+  "hf_hub_url": "Abzu/CodeAlpacaPython",
+  "subset": null,
+  "train_split": "train",
+  "eval_split": "test",
+  "builder_code": "def build(ex):\n    prompt = ex.get(\"prompt\")\n    response = ex.get(\"response\")\n    if not prompt or not isinstance(prompt, str) or not prompt.strip():\n        return None\n    if not response or not isinstance(response, str) or not response.strip():\n        return None\n    return {\"prompt\": prompt.strip(), \"query\": None, \"response\": response.strip()}",
+  "verified": true
+ },
+ {
+  "name": "apps",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "apps",
+  "train_split": "train",
+  "eval_split": "test",
+  "builder_code": "def build(ex):\n    prompt = ex.get(\"inputs\")\n    response = ex.get(\"targets\")\n    if not isinstance(prompt, str) or not isinstance(response, str):\n        return None\n    prompt = prompt.strip()\n    response = response.strip()\n    if not prompt or not response:\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ },
+ {
+  "name": "winogrande",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "winogrande",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    p = ex.get(\"inputs\")\n    r = ex.get(\"targets\")\n    if not p or not r:\n        return None\n    return {\"prompt\": p, \"query\": None, \"response\": r}",
+  "verified": true
+ },
+ {
+  "name": "record",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "record",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    inputs = ex.get(\"inputs\")\n    targets = ex.get(\"targets\")\n    if inputs is None or targets is None:\n        return None\n    prompt = str(inputs).strip()\n    response = str(targets).strip()\n    if not prompt or not response:\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ },
+ {
+  "name": "copa",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "copa",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    prompt = ex.get('inputs')\n    targets = ex.get('targets')\n    response = str(targets) if targets is not None else \"\"\n    if not prompt or not str(prompt).strip() or not response or not response.strip():\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ },
+ {
+  "name": "wsc",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "wsc",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    p = ex.get('inputs')\n    r = ex.get('targets')\n    if p is None or r is None:\n        return None\n    p = str(p)\n    r = str(r)\n    if p.strip() == \"\" or r.strip() == \"\":\n        return None\n    return {\"prompt\": p, \"query\": None, \"response\": r}",
+  "verified": true
+ },
+ {
+  "name": "svamp",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "svamp",
+  "train_split": "train",
+  "eval_split": "test",
+  "builder_code": "def build(ex):\n    prompt = ex.get('inputs')\n    resp = ex.get('targets')\n    if prompt is None or resp is None:\n        return None\n    p = str(prompt)\n    r = str(resp)\n    if p.strip() == \"\" or r.strip() == \"\":\n        return None\n    return {\"prompt\": ex['inputs'], \"query\": None, \"response\": str(ex['targets'])}",
+  "verified": true
+ },
+ {
+  "name": "openbookqa",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "openbookqa",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    prompt = ex.get('inputs')\n    targets = ex.get('targets')\n    if prompt is None or targets is None:\n        return None\n    prompt = str(prompt)\n    response = str(targets)\n    if not prompt.strip() or not response.strip():\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ },
+ {
+  "name": "wic",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "wic",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    prompt = ex.get('inputs')\n    targets = ex.get('targets')\n    if prompt is None or targets is None:\n        return None\n    prompt = str(prompt)\n    response = str(targets)\n    if not prompt.strip() or not response.strip():\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ },
+ {
+  "name": "piqa",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "piqa",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    prompt = ex.get('inputs')\n    resp = ex.get('targets')\n    if prompt is None or resp is None:\n        return None\n    prompt = str(prompt)\n    resp = str(resp)\n    if not prompt.strip() or not resp.strip():\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": resp}",
+  "verified": true
+ },
+ {
+  "name": "multirc",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "multirc",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    prompt = ex.get('inputs')\n    resp = ex.get('targets')\n    if prompt is None or resp is None:\n        return None\n    prompt = str(prompt)\n    response = str(resp)\n    if prompt.strip() == \"\" or response.strip() == \"\":\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ },
+ {
+  "name": "math_qa",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "math_qa",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    prompt = ex.get('inputs')\n    targets = ex.get('targets')\n    if prompt is None or targets is None:\n        return None\n    response = str(targets)\n    if not str(prompt).strip() or not response.strip():\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ },
+ {
+  "name": "siqa",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "siqa",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    prompt = ex.get('inputs')\n    targets = ex.get('targets')\n    if prompt is None or targets is None:\n        return None\n    prompt = str(prompt)\n    response = str(targets)\n    if prompt.strip() == \"\" or response.strip() == \"\":\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ },
+ {
+  "name": "hellaswag",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "hellaswag",
+  "train_split": "train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    prompt = ex.get('inputs')\n    response = ex.get('targets')\n    if prompt is None or response is None:\n        return None\n    prompt = str(prompt)\n    response = str(response)\n    if prompt.strip() == \"\" or response.strip() == \"\":\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ },
+ {
+  "name": "mmlu",
+  "hf_hub_url": "kinit/peft-factory",
+  "subset": "mmlu",
+  "train_split": "auxiliary_train",
+  "eval_split": "validation",
+  "builder_code": "def build(ex):\n    prompt = ex.get('inputs')\n    targets = ex.get('targets')\n    if prompt is None or targets is None:\n        return None\n    prompt = str(prompt)\n    response = str(targets)\n    if not prompt.strip() or not response.strip():\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ },
+ {
+  "name": "gsm8k",
+  "hf_hub_url": "openai/gsm8k",
+  "subset": "main",
+  "train_split": "train",
+  "eval_split": "test",
+  "builder_code": "def build(ex):\n    prompt = ex.get('question')\n    response = ex.get('answer')\n    if prompt is None or response is None:\n        return None\n    prompt = str(prompt)\n    response = str(response)\n    if prompt.strip() == \"\" or response.strip() == \"\":\n        return None\n    return {\"prompt\": prompt, \"query\": None, \"response\": response}",
+  "verified": true
+ }
+]
