@@ -7,8 +7,10 @@ export WORK="${WORK:-/workspace}"; cd "$WORK/PEFT-Bench"
 export HF_HOME="$WORK/hf"
 export MODEL="${MODEL:-NousResearch/Meta-Llama-3-8B-Instruct}"
 export WANDB_PROJECT=peftbench-fullft-smoke
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True   # reduce fragmentation for full-FT 8B on 1 GPU
 
-datasets=(cb svamp conala)        # NLU(250) / math(700) / code(2.4k) — all small/fast
+datasets=(copa svamp)             # NLU(400) / math(700) — clean kinit/peft-factory sources, small/fast
+                                  # (cb/conala deferred: super_glue script-load + missing conala config — see data audit)
 lrs=(5e-6 1e-5 2e-5)
 SEED=42; EPOCHS=10
 CFG=examples/peftbench/full/llama-3-8b-instruct
@@ -23,17 +25,16 @@ for d in "${datasets[@]}"; do
     DATASET="$d" SEED="$SEED" EPOCHS="$EPOCHS" LEARNING_RATE="$lr" MODEL="$MODEL" \
       OUTPUT_DIR="$OUT" WANDB_NAME="smoke_${tag}" \
       envsubst < "$CFG/train.yaml" > "$OUT/train.yaml"
-    /usr/bin/time -v llamafactory-cli train "$OUT/train.yaml" 2> "$OUT/time.txt" || { echo "TRAIN FAIL $tag"; continue; }
+    llamafactory-cli train "$OUT/train.yaml" 2> "$OUT/train.err" || { echo "TRAIN FAIL $tag (see $OUT/train.err)"; tail -5 "$OUT/train.err"; continue; }
     EV="saves/full/smoke/eval_${tag}"; mkdir -p "$EV"
     echo "=== EVAL $tag ==="
     DATASET="$d" SEED="$SEED" TRAINED_MODEL="$OUT" \
       OUTPUT_DIR="$EV" WANDB_NAME="smoke_eval_${tag}" \
       envsubst < "$CFG/eval.yaml" > "$EV/eval.yaml"
     llamafactory-cli train "$EV/eval.yaml" || { echo "EVAL FAIL $tag"; continue; }
-    python scripts/peftbench/compute_metrics.py "$EV" "$d"
+    python scripts/peftbench/compute_metrics.py "$EV" "$d" || { echo "METRIC FAIL $tag"; continue; }
     cp "$EV/results.jsonl" "results/smoke_${tag}.jsonl"
-    # peak memory + a few raw generations for the label-parsing sanity check (premortem 1.2)
-    grep -i "Maximum resident" "$OUT/time.txt" || true
+    # a few raw generations for the label-parsing sanity check (premortem 1.2)
     echo "--- sample preds vs labels ($tag) ---"; head -3 "$EV/generated_predictions.jsonl"
     rm -rf "$OUT"   # free disk (full-FT checkpoint ~100GB); keep eval preds+metrics
   done

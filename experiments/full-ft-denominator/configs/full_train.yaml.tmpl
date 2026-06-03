@@ -24,7 +24,8 @@ packing: false
 ### output
 output_dir: ${OUTPUT_DIR}     # MUST be stable per (dataset,seed) so a restart finds its checkpoints
 logging_steps: 5
-save_steps: 0.05              # checkpoint every 5% of steps → max ~5% work lost on interruption
+save_steps: 0.2               # full-FT checkpoint ~32-100GB & ~138s to write; paper's 0.05 (20 saves/run)
+                              # = ~46min I/O/run for full FT. 0.2 = 5 saves/run. (paper's value suits tiny adapters)
 overwrite_output_dir: false   # CRITICAL: false enables LLaMA-Factory auto-resume (parser.py:403).
                               # true (the paper's value) wipes the dir and restarts from scratch.
 save_only_model: false        # keep optimizer+scheduler+RNG in checkpoints → required to resume
@@ -46,7 +47,8 @@ gradient_checkpointing: true  # full-FT activation memory; mathematically identi
 ddp_timeout: 180000000
 resume_from_checkpoint: null
 warmup_ratio: 0.1
-optim: adamw_torch
+optim: adamw_torch_fused  # paper used adamw_torch; fused = same AdamW math, in-place step (no 64GB
+                         # _foreach_sqrt temp) → fits full-FT 8B on one 140GB H200. Forced by single-GPU memory.
 report_to:
 - wandb
 run_name: ${WANDB_NAME}
@@ -54,5 +56,5 @@ run_name: ${WANDB_NAME}
 ### eval (in-loop validation on 10% held-out train split)
 per_device_eval_batch_size: 4
 eval_strategy: steps
-eval_steps: 0.05
+eval_steps: 0.2               # must match save_steps for load_best_model_at_end
 val_size: 0.1

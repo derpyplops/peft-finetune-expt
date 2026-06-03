@@ -7,6 +7,7 @@ export WORK="${WORK:-/workspace}"; cd "$WORK/PEFT-Bench"
 export HF_HOME="$WORK/hf"
 export MODEL="${MODEL:-NousResearch/Meta-Llama-3-8B-Instruct}"
 export WANDB_PROJECT=peftbench-fullft-seed42
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 : "${LR:?pass LR=<chosen-from-smoke> }"
 SEED=42; EPOCHS=10
 CFG=examples/peftbench/full/llama-3-8b-instruct

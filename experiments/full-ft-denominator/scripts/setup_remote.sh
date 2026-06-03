@@ -17,8 +17,10 @@ echo "=== GPU ==="; nvidia-smi --query-gpu=name,memory.total --format=csv,nohead
 # PEFT-Bench: dataset registry (data/dataset_info.json), compute_metrics.py, configs
 [ -d PEFT-Bench ] || git clone --depth 1 https://github.com/kinit-sk/PEFT-Bench.git
 
-# extra deps the image may lack (CodeBLEU for code datasets; evaluate metrics)
-pip install -q codebleu evaluate sacrebleu scipy scikit-learn 2>&1 | tail -3 || true
+# system tool the image lacks: envsubst (config templating)
+command -v envsubst >/dev/null || (apt-get update -qq && apt-get install -y -qq gettext-base) 2>&1 | tail -2
+# python deps the image may lack (wandb logging; CodeBLEU for code datasets; evaluate metrics)
+pip install -q wandb codebleu evaluate sacrebleu scipy scikit-learn 2>&1 | tail -3 || true
 
 # auth
 wandb login "$WANDB_API_KEY"
