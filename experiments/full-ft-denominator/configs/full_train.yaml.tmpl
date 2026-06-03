@@ -28,8 +28,9 @@ save_steps: 0.2               # full-FT checkpoint ~32-100GB & ~138s to write; p
                               # = ~46min I/O/run for full FT. 0.2 = 5 saves/run. (paper's value suits tiny adapters)
 overwrite_output_dir: false   # CRITICAL: false enables LLaMA-Factory auto-resume (parser.py:403).
                               # true (the paper's value) wipes the dir and restarts from scratch.
-save_only_model: false        # keep optimizer+scheduler+RNG in checkpoints → required to resume
-                              # (cost: full-FT checkpoint ≈ weights 16GB + optim ~64-96GB sharded)
+save_only_model: true         # weights only (~16GB) not optimizer (~120GB total) → ~7x faster saves,
+                              # 7x less disk. Trade: no mid-run resume (ok on stable instance; best-val
+                              # model selection via load_best_model_at_end still works for the denominator).
 plot_loss: true
 include_num_input_tokens_seen: true
 push_to_hub: false            # paper pushes adapters to hub org rbelanec; full 8B models are too big to push

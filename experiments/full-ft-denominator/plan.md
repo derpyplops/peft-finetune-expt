@@ -26,6 +26,20 @@ experiment fills that gap.
 
 ---
 
+## Working principle: shorten feedback loops wherever possible
+
+Default to the **fastest test that can surface the next failure**, not a faithful full run. The first launch
+violated this — we discovered ~5 bugs (GNU `time` missing, datasets-4.0 source breakage, optimizer OOM,
+120GB-checkpoint I/O, save_only_model) *serially*, each costing a ~25-min full-run cycle, when a 2-minute
+tiny run would have caught most at once. Rules:
+- **Tiny before full:** validate plumbing with `max_samples: 16` + `max_steps: 2` (whole train→save→eval→
+  metrics chain in ~2 min). OOM hits at step 1, not epoch 10; save cost shows on save 1.
+- **Small model before big:** iterate model-agnostic logic (configs, envsubst, dataset sources, metrics,
+  label parsing) on **Llama-3.2-1B** (seconds, no OOM, ~2GB) — flip `MODEL` to 8B only for real runs.
+- **Cheap before GPU:** data-source/config/metric bugs are laptop-discoverable; don't burn $4/hr H200 time on them.
+- **Front-load breadth:** preflight ALL 27 datasets at once (find every data bug up front) rather than one-per-sweep.
+- **Measure, don't infer:** a `max_steps: 20` run at real seq len gives true tok/s directly.
+
 ## Training regime: SINGLE-TASK, per-dataset (do NOT mix datasets)
 
 Confirmed from configs: the benchmark trains **27 independent single-task fine-tunes** per (method, seed)
@@ -139,13 +153,22 @@ Image: `hiyouga/llamafactory:latest` (ships LLaMA-Factory + deps) **or** `pytorc
 - [ ] Setup script (`scripts/setup_remote.sh`): clone PEFT-Factory, `pip install -e .`, `huggingface-cli
       login`, pre-download the base model + all 27 datasets to a persistent disk path so re-launches are fast.
 
-### Phase 2 — Smoke test (1 instance, ~2–4 h)
-- [ ] Pick 2–3 cheap datasets: **CB** (250 train, NLU), **SVAMP** (math), **Conala** (code) — covers all 3 task families.
-- [ ] LR sweep {5e-6, 1e-5, 2e-5} × 1 seed on these. Confirm: trains without OOM/divergence, val loss
-      decreases, eval produces a sane metric, and full-FT ≥ Base on at least the NLU task.
-- [ ] Record per-run wall-clock + peak memory → extrapolate total sweep hours & cost. **Gate:** if a single
-      run on a *large* dataset (e.g. MNLI) is projected to be very long, decide on train-subset capping with collaborators.
-- [ ] Lock the LR. Append findings to `EXPERIMENT_LOG.md`.
+### Phase 2 — Tiered validation gates (fast → slow; only 2d does real training)
+
+The original single heavy "smoke test" (3 datasets × 3 LRs × 10 epochs × full data) was the wrong first
+test — it took ~25 min/run to surface 2-minute bugs. Replace with tiered gates, each the cheapest test
+that can fail:
+
+- [ ] **2a Preflight — 1B model, all 27 datasets, `max_samples:16`, 1 epoch** (`scripts/preflight.sh`).
+      Validates every dataset's load + column mapping + llama3 template + train→eval→`compute_metrics`→
+      label-parsing. ~min/dataset, ~free. Catches data-source bugs (cb/boolq/conala), config errors, metric
+      breakage — all at once, before any 8B time. **Also where the dataset_info.json source fixes get verified.**
+- [ ] **2b Canary — 8B, `max_steps:2`, 1 dataset** (`scripts/canary.sh`). ~3 min. Catches OOM (hits at the
+      step-1 optimizer step), save mechanics, real 8B memory headroom.
+- [ ] **2c Throughput — 8B, `max_steps:20`, seq 2048, batch 4** (`scripts/canary.sh --throughput`). ~2 min.
+      Real tok/s on cost-driving long sequences → firm cost estimate (don't infer from slow tiny datasets).
+- [ ] **2d LR sweep — 8B, real small datasets (copa/svamp), 10 epochs, {5e-6,1e-5,2e-5}**. The only gate that
+      needs real training. Output = locked LR + full-FT ≥ Base sanity + label-parsing eyeball. Append to log.
 
 ### Phase 3 — Sweep (staged: one seed first, ascending dataset size)
 
