@@ -1,0 +1,41 @@
+seed: ${SEED}
+
+### model  -- for full FT the trained model IS the checkpoint (no adapter), so point model_name_or_path at it
+model_name_or_path: ${TRAINED_MODEL}   # = training OUTPUT_DIR (best-val checkpoint loaded at end)
+trust_remote_code: true
+flash_attn: auto
+use_cache: false
+
+### method
+stage: sft
+do_train: false
+finetuning_type: full
+
+### dataset
+eval_dataset: ${DATASET}_eval    # PEFT-Bench registers a separate <name>_eval split in data/dataset_info.json
+template: llama3
+cutoff_len: 2048
+overwrite_cache: true
+preprocessing_num_workers: 16
+dataloader_num_workers: 4
+packing: false
+
+### output
+output_dir: ${OUTPUT_DIR}
+logging_steps: 5
+overwrite_output_dir: true
+include_num_input_tokens_seen: true
+save_total_limit: 1
+
+### predict  -- generation-based eval, then scripts/peftbench/compute_metrics.py <output_dir> <dataset>
+do_eval: false
+do_predict: true
+predict_with_generate: true
+per_device_eval_batch_size: 8
+temperature: null
+top_k: null
+top_p: null
+do_sample: false
+report_to:
+- wandb
+run_name: ${WANDB_NAME}
