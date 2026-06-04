@@ -39,6 +39,7 @@ save_total_limit: 1           # bounds disk: only most-recent kept (+best is pro
 
 ### train  -- paper hyperparams, EXCEPT learning_rate (see note)
 per_device_train_batch_size: 4
+gradient_accumulation_steps: ${GRAD_ACCUM}   # effective batch = 4 * GRAD_ACCUM (paper=1 -> eff 4; tiny for 8B FT)
 learning_rate: ${LEARNING_RATE}   # paper PEFT value is 5.0e-5; for FULL FT sweep {5e-6,1e-5,2e-5} in smoke phase
 num_train_epochs: ${EPOCHS}       # paper canonical run_exp.sh = 10
 weight_decay: 1.0e-5

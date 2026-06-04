@@ -9,7 +9,9 @@ export MODEL="${MODEL:-NousResearch/Meta-Llama-3-8B-Instruct}"
 export WANDB_PROJECT=peftbench-fullft-seed42
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 : "${LR:?pass LR=<chosen-from-smoke> }"
-SEED=42; EPOCHS=10
+export GRAD_ACCUM="${GRAD_ACCUM:-1}"   # effective batch = 4*GRAD_ACCUM; set from hparam-sweep winner
+SEED=42; EPOCHS="${EPOCHS:-3}"   # full FT converges in 1-3 epochs; best-val checkpoint selects the peak.
+                    # 10 (paper) just overfits past convergence at ~3x the cost. ~3-4 days/seed vs ~9.
 CFG=examples/peftbench/full/llama-3-8b-instruct
 mkdir -p results
 
