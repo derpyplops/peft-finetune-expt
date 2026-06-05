@@ -1,0 +1,17 @@
+{"tag": "full_lr1e-5_s42_ep10", "method": "full", "lr": "1e-5", "seed": 42, "epochs": 10, "metrics": {"f1": 0.0}, "host": "abf803da0505"}
+{"tag": "full_lr2e-6_s1_ep10", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 10, "metrics": {"f1": 0.5352112676056338}, "host": "abf803da0505"}
+{"tag": "full_lr2e-6_s2_ep10", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 10, "metrics": {"f1": 0.13043478260869565}, "host": "abf803da0505"}
+{"tag": "lora_lr5e-5_s2_ep10", "method": "lora", "lr": "5e-5", "seed": 2, "epochs": 10, "metrics": {"f1": 0.5}, "host": "abf803da0505"}
+{"tag": "full_lr2e-5_s42_ep10", "method": "full", "lr": "2e-5", "seed": 42, "epochs": 10, "metrics": {"f1": 0.0}, "host": "2d2d2b236733"}
+{"tag": "full_lr2e-5_s1_ep10", "method": "full", "lr": "2e-5", "seed": 1, "epochs": 10, "metrics": {"f1": 0.5352112676056338}, "host": "2d2d2b236733"}
+{"tag": "full_lr2e-5_s2_ep10", "method": "full", "lr": "2e-5", "seed": 2, "epochs": 10, "metrics": {"f1": 0.0}, "host": "2d2d2b236733"}
+{"tag": "full_lr1e-5_s1_ep10", "method": "full", "lr": "1e-5", "seed": 1, "epochs": 10, "metrics": {"f1": 0.5352112676056338}, "host": "2d2d2b236733"}
+{"tag": "full_lr1e-5_s2_ep10", "method": "full", "lr": "1e-5", "seed": 2, "epochs": 10, "metrics": {"f1": 0.0}, "host": "2d2d2b236733"}
+{"tag": "full_lr5e-6_s42_ep10", "method": "full", "lr": "5e-6", "seed": 42, "epochs": 10, "metrics": {"f1": 0.54}, "host": "adfd6bdc773e"}
+{"tag": "lora_lr5e-5_s1_ep10", "method": "lora", "lr": "5e-5", "seed": 1, "epochs": 10, "metrics": {"f1": 0.5507246376811594}, "host": "adfd6bdc773e"}
+{"tag": "full_lr2e-6_s42_ep10", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 10, "metrics": {"f1": 0.0}, "host": "adfd6bdc773e"}
+{"tag": "full_lr5e-6_s1_ep10", "method": "full", "lr": "5e-6", "seed": 1, "epochs": 10, "metrics": {"f1": 0.5352112676056338}, "host": "adfd6bdc773e"}
+{"tag": "full_lr5e-6_s2_ep10", "method": "full", "lr": "5e-6", "seed": 2, "epochs": 10, "metrics": {"f1": 0.5352112676056338}, "host": "adfd6bdc773e"}
+{"tag": "lora_lr5e-5_s42_ep10", "method": "lora", "lr": "5e-5", "seed": 42, "epochs": 10, "metrics": {"f1": 0.5052631578947369}, "host": "adfd6bdc773e"}
+{"tag": "full_lr1e-5_s1_ep10", "method": "full", "lr": "1e-5", "seed": 1, "epochs": 10, "metrics": {"f1": 0.5352112676056338}, "host": "adfd6bdc773e"}
+{"tag": "full_lr1e-5_s2_ep10", "method": "full", "lr": "1e-5", "seed": 2, "epochs": 10, "metrics": {"f1": 0.0}, "host": "adfd6bdc773e"}

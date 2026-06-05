@@ -18,7 +18,7 @@ export WANDB_PROJECT=peftbench-wsc-grid
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export GRAD_ACCUM="${GRAD_ACCUM:-1}"   # full_train.yaml.tmpl renders ${GRAD_ACCUM}; unset -> empty -> int*None crash
 RESULTS="${RESULTS:-$WORK/grid_results.jsonl}"; touch "$RESULTS"
-D=wsc
+D="${DS:-wsc}"   # dataset; set DS=svamp etc. Configs use ${DATASET}; compute_metrics keys off $D.
 CFGF=examples/peftbench/full/llama-3-8b-instruct
 CFGL=examples/peftbench/lora/llama-3-8b-instruct
 TMP="$WORK/saves/grid"; mkdir -p "$TMP"
@@ -99,7 +99,7 @@ if os.path.exists(h3file) and os.path.getsize(h3file)>0:
 print(json.dumps(row))
 PYEOF
   echo "=== DONE $tag -> $(tail -1 $RESULTS)"
-  rm -rf "$OUT" "$EV" "$MFILE" "$H3FILE"
+  [ "${KEEP:-0}" = 1 ] && echo "KEEP=1: preserving $EV (generated_predictions for inspection)" || rm -rf "$OUT" "$EV" "$MFILE" "$H3FILE"
 }
 
 for job in "$@"; do run_one "$job"; done
