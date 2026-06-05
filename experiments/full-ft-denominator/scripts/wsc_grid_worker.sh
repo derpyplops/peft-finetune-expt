@@ -16,6 +16,7 @@ export WORK="${WORK:-/workspace}"; cd "$WORK/PEFT-Bench"
 export HF_HOME="$WORK/hf"; export MODEL="${MODEL:-NousResearch/Meta-Llama-3-8B-Instruct}"
 export WANDB_PROJECT=peftbench-wsc-grid
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export GRAD_ACCUM="${GRAD_ACCUM:-1}"   # full_train.yaml.tmpl renders ${GRAD_ACCUM}; unset -> empty -> int*None crash
 RESULTS="${RESULTS:-$WORK/grid_results.jsonl}"; touch "$RESULTS"
 D=wsc
 CFGF=examples/peftbench/full/llama-3-8b-instruct
@@ -46,23 +47,27 @@ run_one() {
   grep -q "\"tag\": \"$tag\"" "$RESULTS" && { echo "skip done: $tag"; return; }
   local OUT="$TMP/train_$tag" EV="$TMP/eval_$tag" MFILE="$TMP/m_$tag.json" H3FILE="$TMP/h3_$tag.tsv"
   rm -rf "$OUT" "$EV" "$MFILE" "$H3FILE"; mkdir -p "$OUT"
-  local H3=0; [ "$method" = full ] && [ "$SEEDv" = 42 ] && H3=1   # selection-criterion probe on seed 42
+  local H3="${H3_ENABLE:-0}"   # selection-criterion probe; OFF by default (needs big disk for multi-ckpt). Set H3_ENABLE=1 on the 400GB box.
+  [ "$H3" = 1 ] && { [ "$method" = full ] && [ "$SEEDv" = 42 ] || H3=0; }
   echo "=== TRAIN $tag (H3=$H3) $(date -u +%H:%M:%S) ==="
   if [ "$method" = full ]; then
     DATASET=$D SEED=$SEEDv EPOCHS=$ep LEARNING_RATE=$lr MODEL=$MODEL OUTPUT_DIR=$OUT \
       SAVE_ONLY_MODEL=true WANDB_NAME=$tag envsubst < $CFGF/train.yaml > $OUT/train.yaml
-    [ "$H3" = 1 ] && sed -i 's/save_steps: 0.2/save_steps: 0.25/; s/eval_steps: 0.2/eval_steps: 0.25/; s/save_total_limit: 1/save_total_limit: 5/' $OUT/train.yaml
-    llamafactory-cli train $OUT/train.yaml > $OUT/log 2>&1 || { echo "TRAINFAIL $tag"; tail -5 $OUT/log; return; }
+    # H3: keep 2 checkpoints (ep~5, ep~10) for per-checkpoint metric scoring — 2x16GB fits the 100GB boxes
+    [ "$H3" = 1 ] && sed -i 's/save_steps: 0.2/save_steps: 0.5/; s/eval_steps: 0.2/eval_steps: 0.5/; s/save_total_limit: 1/save_total_limit: 2/' $OUT/train.yaml
+    if grep -nE '^(gradient_accumulation_steps|learning_rate|num_train_epochs|save_only_model|model_name_or_path|output_dir|seed|run_name|dataset):[[:space:]]*$' $OUT/train.yaml; then echo "RENDERFAIL $tag empty value(s) above"; rm -rf "$OUT" "$EV"; return; fi
+    llamafactory-cli train $OUT/train.yaml > $OUT/log 2>&1 || { echo "TRAINFAIL $tag"; tail -8 $OUT/log; rm -rf "$OUT" "$EV"; return; }
   else
     DATASET=$D SEED=$SEEDv EPOCHS=$ep MODEL=$MODEL OUTPUT_DIR=$OUT WANDB_NAME=$tag envsubst < $CFGL/train.yaml > $OUT/train.yaml
     sed -i 's/push_to_hub: true/push_to_hub: false/; /push_to_hub_organization/d' $OUT/train.yaml
     sed -i "s#meta-llama/Meta-Llama-3-8B-Instruct#$MODEL#" $OUT/train.yaml
-    llamafactory-cli train $OUT/train.yaml > $OUT/log 2>&1 || { echo "TRAINFAIL $tag"; tail -5 $OUT/log; return; }
+    if grep -nE '^(gradient_accumulation_steps|learning_rate|num_train_epochs|save_only_model|model_name_or_path|output_dir|seed|run_name|dataset):[[:space:]]*$' $OUT/train.yaml; then echo "RENDERFAIL $tag empty value(s) above"; rm -rf "$OUT" "$EV"; return; fi
+    llamafactory-cli train $OUT/train.yaml > $OUT/log 2>&1 || { echo "TRAINFAIL $tag"; tail -8 $OUT/log; rm -rf "$OUT" "$EV"; return; }
   fi
 
   # primary eval = best-by-loss model (load_best_model_at_end leaves it at OUT root)
   local kind=full; [ "$method" = lora ] && kind=lora
-  do_eval "$kind" "$OUT" "$EV" "$MFILE" eval_$tag || { echo "EVALFAIL $tag"; return; }
+  do_eval "$kind" "$OUT" "$EV" "$MFILE" eval_$tag || { echo "EVALFAIL $tag"; rm -rf "$OUT" "$EV"; return; }
 
   # H3: eval every kept checkpoint by the metric (results -> H3FILE as step<TAB>json)
   : > "$H3FILE"
