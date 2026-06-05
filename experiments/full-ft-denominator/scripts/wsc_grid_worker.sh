@@ -42,8 +42,9 @@ do_eval() {  # kind(full|lora)  model_dir  out_dir  metric_out_file  wandb_name
 }
 
 run_one() {
-  local job="$1"; IFS=: read -r method lr SEEDv ep <<< "$job"
-  local tag="${method}_lr${lr}_s${SEEDv}_ep${ep}"
+  local job="$1"; IFS=: read -r method lr SEEDv ep reg <<< "$job"
+  reg="${reg:-none}"   # optional 5th field: none|neftune|labelsmooth|bigbatch|wd|all (full-FT regularizers)
+  local tag="${method}_lr${lr}_s${SEEDv}_ep${ep}_${reg}"
   grep -q "\"tag\": \"$tag\"" "$RESULTS" && { echo "skip done: $tag"; return; }
   local OUT="$TMP/train_$tag" EV="$TMP/eval_$tag" MFILE="$TMP/m_$tag.json" H3FILE="$TMP/h3_$tag.tsv"
   rm -rf "$OUT" "$EV" "$MFILE" "$H3FILE"; mkdir -p "$OUT"
@@ -55,6 +56,14 @@ run_one() {
       SAVE_ONLY_MODEL=true WANDB_NAME=$tag envsubst < $CFGF/train.yaml > $OUT/train.yaml
     # H3: keep 2 checkpoints (ep~5, ep~10) for per-checkpoint metric scoring — 2x16GB fits the 100GB boxes
     [ "$H3" = 1 ] && sed -i 's/save_steps: 0.2/save_steps: 0.5/; s/eval_steps: 0.2/eval_steps: 0.5/; s/save_total_limit: 1/save_total_limit: 2/' $OUT/train.yaml
+    case "$reg" in   # full-FT regularizer profiles (Tier-1, config-only)
+      neftune)    echo "neftune_noise_alpha: 5.0" >> $OUT/train.yaml;;
+      labelsmooth) echo "label_smoothing_factor: 0.1" >> $OUT/train.yaml;;
+      bigbatch)   sed -i 's/^gradient_accumulation_steps:.*/gradient_accumulation_steps: 16/' $OUT/train.yaml;;
+      wd)         sed -i 's/^weight_decay:.*/weight_decay: 0.1/' $OUT/train.yaml;;
+      all)        echo "neftune_noise_alpha: 5.0" >> $OUT/train.yaml; echo "label_smoothing_factor: 0.1" >> $OUT/train.yaml
+                  sed -i 's/^gradient_accumulation_steps:.*/gradient_accumulation_steps: 16/; s/^weight_decay:.*/weight_decay: 0.1/' $OUT/train.yaml;;
+    esac
     if grep -nE '^(gradient_accumulation_steps|learning_rate|num_train_epochs|save_only_model|model_name_or_path|output_dir|seed|run_name|dataset):[[:space:]]*$' $OUT/train.yaml; then echo "RENDERFAIL $tag empty value(s) above"; rm -rf "$OUT" "$EV"; return; fi
     llamafactory-cli train $OUT/train.yaml > $OUT/log 2>&1 || { echo "TRAINFAIL $tag"; tail -8 $OUT/log; rm -rf "$OUT" "$EV"; return; }
   else
