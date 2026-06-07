@@ -44,7 +44,7 @@ do_eval() {  # kind(full|lora)  model_dir  out_dir  metric_out_file  wandb_name
 run_one() {
   local job="$1"; IFS=: read -r method lr SEEDv ep reg <<< "$job"
   reg="${reg:-none}"   # optional 5th field: none|neftune|labelsmooth|bigbatch|wd|all (full-FT regularizers)
-  local tag="${method}_lr${lr}_s${SEEDv}_ep${ep}_${reg}"
+  local tag="${D}_${method}_lr${lr}_s${SEEDv}_ep${ep}_${reg}"   # ${D}= dataset prefix so multi-dataset sweeps don't collide
   grep -q "\"tag\": \"$tag\"" "$RESULTS" && { echo "skip done: $tag"; return; }
   local OUT="$TMP/train_$tag" EV="$TMP/eval_$tag" MFILE="$TMP/m_$tag.json" H3FILE="$TMP/h3_$tag.tsv"
   rm -rf "$OUT" "$EV" "$MFILE" "$H3FILE"; mkdir -p "$OUT"
