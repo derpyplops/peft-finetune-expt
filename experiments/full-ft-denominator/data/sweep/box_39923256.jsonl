@@ -1,3 +1,7 @@
 {"tag": "copa_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.9347826086956522}, "host": "5f32b2d3abd1"}
 {"tag": "rte_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.9069767441860465}, "host": "5f32b2d3abd1"}
 {"tag": "wic_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.7434715821812596}, "host": "5f32b2d3abd1"}
+{"tag": "cola_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.9025710419485792}, "host": "5f32b2d3abd1"}
+{"tag": "copa_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"f1": 0.9247311827956989}, "host": "5f32b2d3abd1"}
+{"tag": "rte_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"f1": 0.9090909090909091}, "host": "5f32b2d3abd1"}
+{"tag": "wic_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"f1": 0.7671641791044777}, "host": "5f32b2d3abd1"}
