@@ -18,7 +18,7 @@ pull_commit() {
   ( cd $REPO && git add experiments/full-ft-denominator/data/sweep/ >/dev/null 2>&1 && git commit -q -m "denom sweep results checkpoint $(date -u +%H%M)" >/dev/null 2>&1 && git push >/dev/null 2>&1 )
 }
 curl -s -H "Title: Denominator sweep started" -d "3 nodes. reg=all (LR2e-6/5ep). cheap x3 seeds + mid x1 (~43 jobs; giants deferred). Hourly progress; auto-teardown by morning." $NTFY >/dev/null
-START=$(date +%s); CAP=$((11*3600))
+START=$(date +%s); CAP=$((24*3600))
 for i in $(seq 1 200); do
   rows=0; done=0; detail=""
   for c in $CIDS; do
