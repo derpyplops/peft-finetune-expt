@@ -5,3 +5,5 @@
 {"tag": "wsc_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"f1": 0.0}, "host": "5efa225a249e"}
 {"tag": "mrpc_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"f1": 0.9273356401384083}, "host": "5efa225a249e"}
 {"tag": "stsb_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"pearsonr": 0.9139372009241352}, "host": "5efa225a249e"}
+{"tag": "boolq_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"f1": 0.910997442455243}, "host": "5efa225a249e"}
+{"tag": "wsc_full_lr2e-6_s2_ep5_all", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 5, "metrics": {"f1": 0.0}, "host": "5efa225a249e"}
