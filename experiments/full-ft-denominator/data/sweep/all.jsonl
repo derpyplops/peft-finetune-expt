@@ -1,0 +1,9 @@
+{"tag": "cb_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"macro_f1": 0.46878306878306875}, "host": "c95ef01d6421"}
+{"tag": "svamp_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"total": 300, "math_correct": 267, "format_errors": 1, "gold_exact_equation": 210, "accuracy": 0.89}, "host": "c95ef01d6421"}
+{"tag": "openbookqa_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"macro_f1": 0.8859300383482722}, "host": "c95ef01d6421"}
+{"tag": "wsc_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.0}, "host": "5efa225a249e"}
+{"tag": "mrpc_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.9391304347826087}, "host": "5efa225a249e"}
+{"tag": "stsb_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"pearsonr": 0.918056447665641}, "host": "5efa225a249e"}
+{"tag": "copa_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.9347826086956522}, "host": "5f32b2d3abd1"}
+{"tag": "rte_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.9069767441860465}, "host": "5f32b2d3abd1"}
+{"tag": "wic_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.7434715821812596}, "host": "5f32b2d3abd1"}

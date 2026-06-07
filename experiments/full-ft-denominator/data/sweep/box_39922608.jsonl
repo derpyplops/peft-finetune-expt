@@ -1,0 +1,3 @@
+{"tag": "cb_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"macro_f1": 0.46878306878306875}, "host": "c95ef01d6421"}
+{"tag": "svamp_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"total": 300, "math_correct": 267, "format_errors": 1, "gold_exact_equation": 210, "accuracy": 0.89}, "host": "c95ef01d6421"}
+{"tag": "openbookqa_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"macro_f1": 0.8859300383482722}, "host": "c95ef01d6421"}
