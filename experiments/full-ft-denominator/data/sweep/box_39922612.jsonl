@@ -15,3 +15,4 @@
 {"tag": "siqa_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"macro_f1": 0.8218802443803864}, "host": "5efa225a249e"}
 {"tag": "piqa_full_lr2e-6_s2_ep5_all", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 5, "metrics": {"f1": 0.889505830094392}, "host": "5efa225a249e"}
 {"tag": "math_qa_full_lr2e-6_s2_ep5_all", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 5, "metrics": {"macro_f1": 0.5461753473234726}, "host": "5efa225a249e"}
+{"tag": "winogrande_full_lr2e-6_s2_ep5_all", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 5, "metrics": {"f1": 0.8939740655987796}, "host": "5efa225a249e"}
