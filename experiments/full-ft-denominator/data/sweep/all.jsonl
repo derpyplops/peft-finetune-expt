@@ -34,6 +34,7 @@
 {"tag": "piqa_full_lr2e-6_s2_ep5_all", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 5, "metrics": {"f1": 0.889505830094392}, "host": "5efa225a249e"}
 {"tag": "math_qa_full_lr2e-6_s2_ep5_all", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 5, "metrics": {"macro_f1": 0.5461753473234726}, "host": "5efa225a249e"}
 {"tag": "winogrande_full_lr2e-6_s2_ep5_all", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 5, "metrics": {"f1": 0.8939740655987796}, "host": "5efa225a249e"}
+{"tag": "sst2_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.9617977528089887}, "host": "5efa225a249e"}
 {"tag": "copa_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.9347826086956522}, "host": "5f32b2d3abd1"}
 {"tag": "rte_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.9069767441860465}, "host": "5f32b2d3abd1"}
 {"tag": "wic_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.7434715821812596}, "host": "5f32b2d3abd1"}
