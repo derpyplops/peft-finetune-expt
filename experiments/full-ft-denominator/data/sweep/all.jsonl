@@ -53,3 +53,4 @@
 {"tag": "winogrande_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"f1": 0.8927173061863743}, "host": "5f32b2d3abd1"}
 {"tag": "multirc_full_lr2e-6_s2_ep5_all", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 5, "metrics": {"f1": 0.8848603625673689}, "host": "5f32b2d3abd1"}
 {"tag": "hellaswag_full_lr2e-6_s2_ep5_all", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 5, "metrics": {"macro_f1": 0.950034512163621}, "host": "5f32b2d3abd1"}
+{"tag": "qnli_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"f1": 0.9587255611875453}, "host": "5f32b2d3abd1"}
