@@ -12,3 +12,4 @@
 {"tag": "cola_full_lr2e-6_s2_ep5_all", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 5, "metrics": {"f1": 0.8968729208250167}, "host": "5f32b2d3abd1"}
 {"tag": "siqa_full_lr2e-6_s42_ep5_all", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 5, "metrics": {"macro_f1": 0.8130892261632431}, "host": "5f32b2d3abd1"}
 {"tag": "piqa_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"f1": 0.8995726495726496}, "host": "5f32b2d3abd1"}
+{"tag": "math_qa_full_lr2e-6_s1_ep5_all", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 5, "metrics": {"macro_f1": 0.5647683306302991}, "host": "5f32b2d3abd1"}
