@@ -1,0 +1,15 @@
+{"tag": "cb_lora_lr5e-5_s42_ep10_none", "method": "lora", "lr": "5e-5", "seed": 42, "epochs": 10, "metrics": {"macro_f1": 0.9236652236652237}, "host": "fbd6c67d9823"}
+{"tag": "cb_lora_lr5e-5_s1_ep10_none", "method": "lora", "lr": "5e-5", "seed": 1, "epochs": 10, "metrics": {"macro_f1": 0.7678845627984267}, "host": "fbd6c67d9823"}
+{"tag": "cb_lora_lr5e-5_s2_ep10_none", "method": "lora", "lr": "5e-5", "seed": 2, "epochs": 10, "metrics": {"macro_f1": 0.573025856044724}, "host": "fbd6c67d9823"}
+{"tag": "copa_lora_lr5e-5_s42_ep10_none", "method": "lora", "lr": "5e-5", "seed": 42, "epochs": 10, "metrics": {"f1": 0.9347826086956522}, "host": "fbd6c67d9823"}
+{"tag": "copa_lora_lr5e-5_s1_ep10_none", "method": "lora", "lr": "5e-5", "seed": 1, "epochs": 10, "metrics": {"f1": 0.9263157894736842}, "host": "fbd6c67d9823"}
+{"tag": "copa_lora_lr5e-5_s2_ep10_none", "method": "lora", "lr": "5e-5", "seed": 2, "epochs": 10, "metrics": {"f1": 0.9361702127659575}, "host": "fbd6c67d9823"}
+{"tag": "wsc_lora_lr5e-5_s42_ep10_none", "method": "lora", "lr": "5e-5", "seed": 42, "epochs": 10, "metrics": {"f1": 0.5223880597014925}, "host": "fbd6c67d9823"}
+{"tag": "wsc_lora_lr5e-5_s1_ep10_none", "method": "lora", "lr": "5e-5", "seed": 1, "epochs": 10, "metrics": {"f1": 0.5454545454545454}, "host": "fbd6c67d9823"}
+{"tag": "wsc_lora_lr5e-5_s2_ep10_none", "method": "lora", "lr": "5e-5", "seed": 2, "epochs": 10, "metrics": {"f1": 0.5285714285714286}, "host": "fbd6c67d9823"}
+{"tag": "svamp_lora_lr5e-5_s42_ep10_none", "method": "lora", "lr": "5e-5", "seed": 42, "epochs": 10, "metrics": {"total": 300, "math_correct": 272, "format_errors": 10, "gold_exact_equation": 219, "accuracy": 0.9066666666666666}, "host": "fbd6c67d9823"}
+{"tag": "svamp_lora_lr5e-5_s1_ep10_none", "method": "lora", "lr": "5e-5", "seed": 1, "epochs": 10, "metrics": {"total": 300, "math_correct": 262, "format_errors": 22, "gold_exact_equation": 177, "accuracy": 0.8733333333333333}, "host": "fbd6c67d9823"}
+{"tag": "svamp_lora_lr5e-5_s2_ep10_none", "method": "lora", "lr": "5e-5", "seed": 2, "epochs": 10, "metrics": {"total": 300, "math_correct": 266, "format_errors": 11, "gold_exact_equation": 215, "accuracy": 0.8866666666666667}, "host": "fbd6c67d9823"}
+{"tag": "rte_lora_lr5e-5_s42_ep10_none", "method": "lora", "lr": "5e-5", "seed": 42, "epochs": 10, "metrics": {"f1": 0.8653061224489796}, "host": "fbd6c67d9823"}
+{"tag": "rte_lora_lr5e-5_s1_ep10_none", "method": "lora", "lr": "5e-5", "seed": 1, "epochs": 10, "metrics": {"f1": 0.8931297709923665}, "host": "fbd6c67d9823"}
+{"tag": "rte_lora_lr5e-5_s2_ep10_none", "method": "lora", "lr": "5e-5", "seed": 2, "epochs": 10, "metrics": {"f1": 0.9032258064516129}, "host": "fbd6c67d9823"}
