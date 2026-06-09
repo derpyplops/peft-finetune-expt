@@ -1,0 +1,16 @@
+{"tag": "cb_freeze_lr2e-6_s42_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 42, "epochs": 10, "metrics": {"macro_f1": 0.8400816070307595}, "host": "f687b3e22064"}
+{"tag": "copa_freeze_lr2e-6_s42_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 42, "epochs": 10, "metrics": {"f1": 0.9090909090909091}, "host": "f687b3e22064"}
+{"tag": "wsc_freeze_lr2e-6_s42_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 42, "epochs": 10, "metrics": {"f1": 0.0}, "host": "f687b3e22064"}
+{"tag": "svamp_freeze_lr2e-6_s42_ep10_paperbudget", "method": "freeze", "metrics": {}}
+{"tag": "svamp_freeze_lr2e-6_s1_ep10_paperbudget", "method": "freeze", "metrics": {}}
+{"tag": "svamp_freeze_lr2e-6_s2_ep10_paperbudget", "method": "freeze", "metrics": {}}
+{"tag": "rte_freeze_lr2e-6_s42_ep10_paperbudget", "method": "freeze", "metrics": {}}
+{"tag": "rte_freeze_lr2e-6_s1_ep10_paperbudget", "method": "freeze", "metrics": {}}
+{"tag": "rte_freeze_lr2e-6_s2_ep10_paperbudget", "method": "freeze", "metrics": {}}
+{"tag": "svamp_freeze_lr2e-6_s42_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 42, "epochs": 10, "metrics": {"total": 300, "math_correct": 266, "format_errors": 1, "gold_exact_equation": 186, "accuracy": 0.8866666666666667}, "host": "f687b3e22064"}
+{"tag": "cb_freeze_lr2e-6_s1_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 1, "epochs": 10, "metrics": {"macro_f1": 0.8661503048401146}, "host": "f687b3e22064"}
+{"tag": "copa_freeze_lr2e-6_s1_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 1, "epochs": 10, "metrics": {"f1": 0.8695652173913043}, "host": "f687b3e22064"}
+{"tag": "wsc_freeze_lr2e-6_s1_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 1, "epochs": 10, "metrics": {"f1": 0.40963855421686746}, "host": "f687b3e22064"}
+{"tag": "cb_freeze_lr2e-6_s2_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 2, "epochs": 10, "metrics": {"macro_f1": 0.8661503048401146}, "host": "f687b3e22064"}
+{"tag": "copa_freeze_lr2e-6_s2_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 2, "epochs": 10, "metrics": {"f1": 0.8764044943820225}, "host": "f687b3e22064"}
+{"tag": "wsc_freeze_lr2e-6_s2_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 2, "epochs": 10, "metrics": {"f1": 0.29333333333333333}, "host": "f687b3e22064"}
