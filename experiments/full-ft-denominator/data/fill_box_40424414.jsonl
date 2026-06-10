@@ -1,0 +1,2 @@
+{"tag": "svamp_full_lr2e-6_s42_ep10_paperbudget", "method": "full", "lr": "2e-6", "seed": 42, "epochs": 10, "metrics": {"total": 300, "math_correct": 256, "format_errors": 0, "gold_exact_equation": 222, "accuracy": 0.8533333333333334}, "host": "a1d97e5a3e4f"}
+{"tag": "svamp_full_lr2e-6_s1_ep10_paperbudget", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 10, "metrics": {"total": 300, "math_correct": 260, "format_errors": 0, "gold_exact_equation": 204, "accuracy": 0.8666666666666667}, "host": "a1d97e5a3e4f"}

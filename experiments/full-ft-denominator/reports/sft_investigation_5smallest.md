@@ -15,12 +15,12 @@ Arms (5 smallest datasets, 3 seeds each):
 | cb | 250 | 47.0 | 53.9±5.1 | 96.1±1.8 | 85.7±1.2 | 75.5±14.3 | 83.9 |
 | copa | 400 | 73.8 | 91.8±1.7 | 92.9±0.9 | 88.5±1.7 | 93.2±0.4 | 97.8 |
 | wsc | 554 | 43.6 | 0.0±0.0 | 0.0±0.0 | 23.4±17.2 | 53.2±1.0 | 53.6 |
-| svamp | 700 | 56.7 | 89.4±0.4 | 79.0±0.0 | 86.6±3.7 | 88.9±1.4 | 88.0 |
+| svamp | 700 | 56.7 | 89.4±0.4 | 83.7±3.3 | 86.6±3.7 | 88.9±1.4 | 88.0 |
 | rte | 2490 | 69.7 | 90.1±0.9 | 88.3±2.4 | 81.0±1.8 | 88.7±1.6 | 85.7 |
 
 ## Read
 
-**B−A (paper-budget vs baseline full-FT):** cb +42.2, copa +1.1, wsc +0.0, svamp -10.4, rte -1.9
+**B−A (paper-budget vs baseline full-FT):** cb +42.2, copa +1.1, wsc +0.0, svamp -5.8, rte -1.9
 **D−A (freeze-top16 vs baseline full-FT):** cb +31.9, copa -3.3, wsc +23.4, svamp -2.9, rte -9.1
 
 If B closes most of the gap to LoRA/paper, full-FT was under-trained, not inherently worse — and the denominator config must be re-tuned (smaller batch / more epochs) on small datasets. wsc is degenerate (metric artifact), discount it.
