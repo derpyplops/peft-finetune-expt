@@ -1,0 +1,4 @@
+{"tag": "svamp_freeze_lr2e-6_s2_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 2, "epochs": 10, "metrics": {"total": 300, "math_correct": 244, "format_errors": 6, "gold_exact_equation": 167, "accuracy": 0.8133333333333334}, "host": "49e816d56c7c"}
+{"tag": "rte_freeze_lr2e-6_s1_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 1, "epochs": 10, "metrics": {"f1": 0.8327137546468402}, "host": "49e816d56c7c"}
+{"tag": "rte_freeze_lr2e-6_s2_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 2, "epochs": 10, "metrics": {"f1": 0.8104089219330854}, "host": "49e816d56c7c"}
+{"tag": "rte_freeze_lr2e-6_s42_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 42, "epochs": 10, "metrics": {"f1": 0.7874015748031497}, "host": "49e816d56c7c"}

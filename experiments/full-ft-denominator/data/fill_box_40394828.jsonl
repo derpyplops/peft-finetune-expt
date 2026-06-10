@@ -1,0 +1,2 @@
+{"tag": "rte_full_lr2e-6_s1_ep10_paperbudget", "method": "full", "lr": "2e-6", "seed": 1, "epochs": 10, "metrics": {"f1": 0.8714285714285714}, "host": "eee6c62e4180"}
+{"tag": "svamp_freeze_lr2e-6_s1_ep10_paperbudget", "method": "freeze", "lr": "2e-6", "seed": 1, "epochs": 10, "metrics": {"total": 300, "math_correct": 269, "format_errors": 5, "gold_exact_equation": 184, "accuracy": 0.8966666666666666}, "host": "eee6c62e4180"}

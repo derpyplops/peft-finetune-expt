@@ -1,0 +1,1 @@
+{"tag": "rte_full_lr2e-6_s2_ep10_paperbudget", "method": "full", "lr": "2e-6", "seed": 2, "epochs": 10, "metrics": {"f1": 0.9153846153846154}, "host": "dd6bd0d36000"}
